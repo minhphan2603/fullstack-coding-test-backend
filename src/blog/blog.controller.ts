@@ -45,24 +45,35 @@ export class BlogController {
 
   @Put(':id')
   async updateBlog(@Param() param, @Body() blogData: CreateBlogDto) {
-    console.log(param);
-    const blog = await getRepository(Blog).findOne(param.id);
-    if (!blog) {
+    try {
+      console.log(param);
+      const blog = await getRepository(Blog).findOne(param.id);
+      if (!blog) {
+        return {
+          status: false,
+          message: 'Blog not found!',
+        };
+      }
+      blog.title = blogData.title;
+      blog.content = blogData.content;
+      blog.imgSrc = blogData.imgSrc;
+      await Promise.all([
+        getRepository(Blog).save(blog),
+        admin
+          .firestore()
+          .collection('blogs')
+          .doc(blog.firebaseId)
+          .set(blogData),
+      ]);
+      return {
+        status: true,
+      };
+    } catch (error) {
+      console.log('asdfasdfasdfasdfasdfa sasdfasdfasdf12312312 ', error);
       return {
         status: false,
-        message: 'Blog not found!',
       };
     }
-    blog.title = blogData.title;
-    blog.content = blogData.content;
-    blog.imgSrc = blogData.imgSrc;
-
-    await Promise.all([
-      getRepository(Blog).save(blog),
-      admin.firestore().collection('blogs').doc(blog.firebaseId).set(blogData),
-    ]);
-
-    return blog;
   }
 
   @Delete(':id')
