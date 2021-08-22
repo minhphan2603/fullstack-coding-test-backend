@@ -2,19 +2,23 @@ import { Body, Controller, Get, Post } from '@nestjs/common';
 import { getRepository } from 'typeorm';
 import { IsDateString, IsEmail, IsNotEmpty, IsString } from 'class-validator';
 import * as admin from 'firebase-admin';
+import { ApiProperty } from '@nestjs/swagger';
 import { User } from '../entity/User';
 
 class CreateUserDto {
   @IsNotEmpty()
   @IsEmail()
+  @ApiProperty()
   name: string;
 
   @IsDateString()
+  @ApiProperty()
   dateOfBirth: string;
 }
 
 class FirebaseUserDTO {
   @IsString()
+  @ApiProperty()
   firebaseId: string;
 }
 
