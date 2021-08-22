@@ -69,7 +69,7 @@ export class BlogController {
         status: true,
       };
     } catch (error) {
-      console.log('asdfasdfasdfasdfasdfa sasdfasdfasdf12312312 ', error);
+      console.log('updateBlog ', error);
       return {
         status: false,
       };
